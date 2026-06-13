@@ -8,40 +8,47 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground flex flex-col relative overflow-hidden dark">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-background/40 backdrop-blur-md border-b border-white/5">
-        <Link href="/" className="flex items-center gap-3">
-          <img src={`${basePath}/logo.svg`} alt="Gravity Logo" className="w-8 h-8 object-contain" />
-          <span className="font-bold text-xl tracking-tight text-white">Gravity</span>
+    <div className="min-h-screen w-full bg-black text-white flex flex-col relative dark">
+      {/* Navbar — minimal, Velocity-style */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5">
+        <Link href="/" className="font-bold text-sm tracking-[0.15em] uppercase text-white hover:opacity-70 transition-opacity">
+          GRAVITY
         </Link>
-        <div className="flex items-center gap-4">
+
+        <div className="flex items-center gap-8">
+          <Link href="/" className="text-sm text-white/60 hover:text-white transition-colors hidden md:block">
+            Products
+          </Link>
+          <Show when="signed-in">
+            {user?.primaryEmailAddress?.emailAddress === "adammalik1234674@gmail.com" && (
+              <Link href="/admin" className="text-sm text-white/60 hover:text-white transition-colors hidden md:block">
+                Admin Panel
+              </Link>
+            )}
+          </Show>
           <Show when="signed-out">
-            <Link href="/sign-in" className="text-sm font-medium text-purple-200 hover:text-white transition-colors">
+            <Link href="/sign-in" className="text-sm text-white/60 hover:text-white transition-colors hidden md:block">
               Sign In
-            </Link>
-            <Link href="/sign-up" className="text-sm font-medium bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-full transition-colors shadow-[0_0_15px_rgba(147,51,234,0.4)]">
-              Get Started
             </Link>
           </Show>
           <Show when="signed-in">
-            {user?.primaryEmailAddress?.emailAddress === "adammalik1234674@gmail.com" && (
-              <Link href="/admin" className="text-sm font-medium text-purple-200 hover:text-white transition-colors">
-                Admin
-              </Link>
-            )}
             <button
               onClick={() => signOut({ redirectUrl: basePath || "/" })}
-              className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
+              className="text-sm text-white/60 hover:text-white transition-colors hidden md:block"
             >
-              Log out
+              Sign Out
             </button>
           </Show>
+          <Link
+            href="/download"
+            className="text-sm font-medium text-white border border-white/30 hover:bg-white hover:text-black transition-all px-4 py-1.5 rounded-sm"
+          >
+            Download
+          </Link>
         </div>
       </nav>
-      
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col w-full z-10 pt-[72px]">
+
+      <main className="flex-1 flex flex-col w-full">
         {children}
       </main>
     </div>

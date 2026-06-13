@@ -1,155 +1,311 @@
 import { Layout } from "@/components/layout";
-import { GalaxyBackground } from "@/components/galaxy-background";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+function downloadIcon() {
+  fetch(`${basePath}/logo.svg`)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "gravity-icon.svg";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    });
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.12, ease: [0.25, 0.1, 0.25, 1] },
+  }),
+};
+
 export default function Home() {
-  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-  const downloadLogo = () => {
-    fetch(`${basePath}/logo.svg`)
-      .then(res => res.blob())
-      .then(blob => {
-        const url = window.URL.createUrl(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'gravity-icon.svg';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      });
-  };
-
   return (
     <Layout>
-      <GalaxyBackground />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 text-center z-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="relative w-48 h-48 mb-8"
-        >
-          <div className="absolute inset-0 bg-purple-600 rounded-full blur-[100px] opacity-30 animate-pulse"></div>
-          <img 
-            src={`${basePath}/logo.svg`} 
-            alt="Gravity Logo" 
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(147,51,234,0.5)] animate-[float_6s_ease-in-out_infinite]"
-          />
-        </motion.div>
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-24 pb-16 bg-black overflow-hidden">
+        <div className="max-w-5xl">
+          {/* Big display headline */}
+          <motion.div
+            initial="hidden"
+            animate="show"
+            className="space-y-0 leading-none select-none"
+          >
+            <motion.p
+              custom={0}
+              variants={fadeUp}
+              className="text-[clamp(4rem,12vw,9rem)] font-bold tracking-tight text-white leading-[0.9]"
+            >
+              Made
+            </motion.p>
+            <motion.p
+              custom={1}
+              variants={fadeUp}
+              className="text-[clamp(4rem,12vw,9rem)] font-bold tracking-tight text-white leading-[0.9]"
+            >
+              with
+            </motion.p>
+            <motion.p
+              custom={2}
+              variants={fadeUp}
+              className="text-[clamp(4rem,12vw,9rem)] font-bold italic tracking-tight text-white leading-[0.9] underline decoration-[0.04em] underline-offset-[0.1em]"
+            >
+              gravity.
+            </motion.p>
+          </motion.div>
 
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-black tracking-tighter text-white mb-6"
-        >
-          GRAVITY
-        </motion.h1>
+          {/* Subtitle */}
+          <motion.p
+            custom={3}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="mt-10 text-sm text-white/40 max-w-xs leading-relaxed"
+          >
+            Unmatched power and stability through cutting-edge tools. Built for
+            performance. Built to last.
+          </motion.p>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-purple-200/80 font-light max-w-2xl mb-12"
+          {/* CTA buttons */}
+          <motion.div
+            custom={4}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="mt-10 flex items-center gap-4"
+          >
+            <Link
+              href="/download"
+              className="inline-flex items-center justify-center px-6 py-3 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+              data-testid="button-download-hero"
+            >
+              Download
+            </Link>
+            <button
+              onClick={downloadIcon}
+              className="inline-flex items-center justify-center px-6 py-3 border border-white/20 text-white text-sm font-medium hover:border-white/50 hover:bg-white/5 transition-all"
+              data-testid="button-download-icon"
+            >
+              Get Icon
+            </button>
+          </motion.div>
+        </div>
+
+        {/* SCROLL hint */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.25em] uppercase text-white/20"
         >
-          Step into a new dimension. Download the ultimate desktop experience.
+          SCROLL
         </motion.p>
+      </section>
 
+      {/* ── PRODUCTS ── */}
+      <section id="products" className="px-8 md:px-16 py-20 bg-black border-t border-white/[0.06]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 items-center"
-        >
-          <Link href="/sign-in" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-white text-black font-semibold text-lg transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-            Sign In to Download
-          </Link>
-          <Button 
-            variant="outline" 
-            onClick={downloadLogo}
-            className="h-14 px-8 rounded-full border-purple-500/30 bg-black/40 text-purple-200 hover:bg-purple-900/30 hover:text-white backdrop-blur-sm"
-          >
-            Download Gravity Icon
-          </Button>
-        </motion.div>
-      </section>
-
-      {/* Feature Section 1 */}
-      <section className="relative py-32 px-6 border-t border-white/5 bg-black/40 backdrop-blur-sm z-10">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Cosmic Performance.</h2>
-            <p className="text-lg text-purple-200/60 leading-relaxed">
-              Engineered from the ground up to feel weightless. Gravity consumes minimal system resources while providing an expansive set of tools right at your fingertips.
-            </p>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="aspect-video rounded-2xl bg-gradient-to-br from-purple-900/20 to-black border border-purple-500/20 shadow-[0_0_50px_rgba(147,51,234,0.1)] flex items-center justify-center overflow-hidden relative"
-          >
-             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-screen"></div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Feature Section 2 */}
-      <section className="relative py-32 px-6 bg-transparent z-10">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="order-2 md:order-1 aspect-video rounded-2xl bg-gradient-to-tr from-indigo-900/20 to-black border border-indigo-500/20 shadow-[0_0_50px_rgba(79,70,229,0.1)] flex items-center justify-center overflow-hidden relative"
-          >
-             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2000&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-screen"></div>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="order-1 md:order-2"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Dark Matter Design.</h2>
-            <p className="text-lg text-purple-200/60 leading-relaxed">
-              A visually stunning interface that feels right at home on modern setups. No blinding white screens, just pure, unadulterated focus.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-32 px-6 border-t border-white/5 bg-black/60 backdrop-blur-md z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto flex flex-col items-center"
+          transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">Ready to launch?</h2>
-          <Link href="/sign-in" className="inline-flex items-center justify-center h-16 px-10 rounded-full bg-purple-600 text-white font-semibold text-xl transition-all hover:bg-purple-500 shadow-[0_0_40px_rgba(147,51,234,0.4)] hover:shadow-[0_0_60px_rgba(147,51,234,0.6)] hover:scale-105">
-            Enter the Cosmos
+          <p className="text-[10px] tracking-[0.25em] uppercase text-white/30 mb-3">EXPLORE</p>
+          <div className="flex items-end justify-between mb-10">
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">Products</h2>
+            <span className="hidden md:flex items-center justify-center border border-white/20 text-white text-xs px-4 py-2 hover:bg-white/5 cursor-pointer transition-colors">
+              Software
+            </span>
+          </div>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* Product card — main */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-[#0d0d0d] border border-white/[0.06] overflow-hidden group"
+            data-testid="card-product-gravity-windows"
+          >
+            <div className="aspect-video relative overflow-hidden bg-[#111] flex items-center justify-center">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-white/30 absolute top-3 left-3 bg-black/60 px-2 py-1">
+                WINDOWS
+              </span>
+              <img
+                src={`${basePath}/logo.svg`}
+                alt="Gravity Windows"
+                className="w-24 h-24 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+              />
+            </div>
+            <div className="p-5">
+              <h3 className="font-semibold text-white mb-1.5">Gravity Windows</h3>
+              <p className="text-xs text-white/40 leading-relaxed mb-5">
+                Experience unmatched performance with our cutting-edge Windows client. Built
+                for speed and reliability.
+              </p>
+              <Link
+                href="/download"
+                className="text-xs text-white hover:text-white/70 transition-colors"
+                data-testid="link-download-gravity-windows"
+              >
+                Download
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Product card — coming soon 1 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="bg-[#0d0d0d] border border-white/[0.06] overflow-hidden"
+            data-testid="card-product-gravity-lite"
+          >
+            <div className="aspect-video bg-[#0a0a14] flex items-center justify-center relative">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-white/30 absolute top-3 left-3 bg-black/60 px-2 py-1">
+                WINDOWS
+              </span>
+              <p className="text-3xl font-bold italic text-white/10 text-center leading-tight px-4">
+                COMING<br />SOON
+              </p>
+            </div>
+            <div className="p-5">
+              <h3 className="font-semibold text-white mb-1.5">Gravity Lite (coming soon)</h3>
+              <p className="text-xs text-white/30 leading-relaxed mb-5">Coming soon.</p>
+              <span className="text-xs text-white/20">Download</span>
+            </div>
+          </motion.div>
+
+          {/* Product card — coming soon 2 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-[#0d0d0d] border border-white/[0.06] overflow-hidden"
+            data-testid="card-product-gravity-pro"
+          >
+            <div className="aspect-video bg-[#0a0a14] flex items-center justify-center relative">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-white/30 absolute top-3 left-3 bg-black/60 px-2 py-1">
+                WINDOWS
+              </span>
+              <p className="text-3xl font-bold italic text-white/10 text-center leading-tight px-4">
+                COMING<br />SOON
+              </p>
+            </div>
+            <div className="p-5">
+              <h3 className="font-semibold text-white mb-1.5">Gravity Pro (coming soon)</h3>
+              <p className="text-xs text-white/30 leading-relaxed mb-5">Coming soon.</p>
+              <span className="text-xs text-white/20">Download</span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── FEATURES ── */}
+      <section className="px-8 md:px-16 py-24 bg-black border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <p className="text-[10px] tracking-[0.25em] uppercase text-white/30 mb-4">PERFORMANCE</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Built from the ground up.
+            </h2>
+            <p className="text-sm text-white/40 leading-relaxed">
+              Gravity consumes minimal system resources while delivering an expansive suite of tools. 
+              Every line of code written with one goal: speed.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="aspect-video bg-[#0d0d0d] border border-white/[0.06] flex items-center justify-center"
+          >
+            <img src={`${basePath}/logo.svg`} alt="Gravity" className="w-28 h-28 object-contain opacity-30" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── PRECISION STATEMENT ── */}
+      <section className="px-8 md:px-16 py-24 bg-black border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="order-2 md:order-1 aspect-video bg-[#0d0d0d] border border-white/[0.06] flex items-center justify-center"
+          >
+            <p className="text-5xl font-bold italic text-white/5 text-center">
+              GRAVITY
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="order-1 md:order-2"
+          >
+            <p className="text-[10px] tracking-[0.25em] uppercase text-white/30 mb-4">DESIGN</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Precision at every pixel.
+            </h2>
+            <p className="text-sm text-white/40 leading-relaxed">
+              A visually refined interface built for focus. No distractions — just clean, 
+              deliberate design that gets out of your way.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="px-8 md:px-16 py-32 bg-black border-t border-white/[0.06]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="max-w-2xl"
+        >
+          <h2 className="text-[clamp(3rem,8vw,6rem)] font-bold leading-[0.9] text-white mb-10">
+            Ready to<br />
+            <span className="italic">launch.</span>
+          </h2>
+          <Link
+            href="/download"
+            className="inline-flex items-center justify-center px-8 py-3.5 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+            data-testid="button-cta-download"
+          >
+            Download Gravity
           </Link>
         </motion.div>
       </section>
-      
-      {/* Footer */}
-      <footer className="relative py-8 px-6 border-t border-white/10 bg-black z-10 text-center">
-        <p className="text-purple-200/40 text-sm">© {new Date().getFullYear()} Gravity. All rights reserved.</p>
+
+      {/* ── FOOTER ── */}
+      <footer className="px-8 md:px-16 py-8 border-t border-white/[0.06]">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-white/20">GRAVITY</span>
+          <p className="text-xs text-white/20">© {new Date().getFullYear()} Gravity. All rights reserved.</p>
+        </div>
       </footer>
     </Layout>
   );
