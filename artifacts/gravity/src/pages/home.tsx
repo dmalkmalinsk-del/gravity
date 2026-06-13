@@ -1,6 +1,7 @@
 import { Layout } from "@/components/layout";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { easeOut } from "framer-motion";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
