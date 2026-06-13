@@ -3,20 +3,21 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Gravity download platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: release
+    description: Release management
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +25,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /release:
+    get:
+      operationId: getRelease
+      tags: [release]
+      summary: Get current release info
+      responses:
+        "200":
+          description: Release info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Release"
+
+    patch:
+      operationId: updateRelease
+      tags: [release]
+      summary: Update release metadata (owner only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReleaseUpdate"
+      responses:
+        "200":
+          description: Updated release
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Release"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +71,38 @@ components:
       required:
         - status
 
+    Release:
+      type: object
+      properties:
+        id:
+          type: integer
+        updated:
+          type: boolean
+          description: If true users can download. If false download is disabled.
+        fileName:
+          type: ["string", "null"]
+          description: Original filename of the uploaded exe
+        version:
+          type: ["string", "null"]
+          description: Version label set by the owner
+        uploadedAt:
+          type: ["string", "null"]
+          description: ISO timestamp of last upload
+        updatedAt:
+          type: string
+          description: ISO timestamp of last metadata update
+      required:
+        - id
+        - updated
+        - fileName
+        - version
+        - uploadedAt
+        - updatedAt
+
+    ReleaseUpdate:
+      type: object
+      properties:
+        updated:
+          type: boolean
+        version:
+          type: string
