@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "artifacts/gravity/dist/public",
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}
