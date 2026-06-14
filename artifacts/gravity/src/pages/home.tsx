@@ -5,21 +5,6 @@ import { easeOut } from "framer-motion";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-function downloadIcon() {
-  fetch(`${basePath}/logo.svg`)
-    .then((res) => res.blob())
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "gravity-icon.svg";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    });
-}
-
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   show: (i: number) => ({
@@ -95,13 +80,6 @@ export default function Home() {
             >
               Download
             </Link>
-            <button
-              onClick={downloadIcon}
-              className="inline-flex items-center justify-center px-6 py-3 border border-white/20 text-white text-sm font-medium hover:border-white/50 hover:bg-white/5 transition-all"
-              data-testid="button-download-icon"
-            >
-              Get Icon
-            </button>
           </motion.div>
         </div>
 
@@ -148,7 +126,7 @@ export default function Home() {
                 WINDOWS
               </span>
               <img
-                src={`${basePath}/logo.svg`}
+                src={`${basePath}/logo.png`}
                 alt="Gravity Windows"
                 className="w-24 h-24 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500"
               />
@@ -244,7 +222,7 @@ export default function Home() {
             transition={{ duration: 0.7 }}
             className="aspect-video bg-[#0d0d0d] border border-white/[0.06] flex items-center justify-center"
           >
-            <img src={`${basePath}/logo.svg`} alt="Gravity" className="w-28 h-28 object-contain opacity-30" />
+            <img src={`${basePath}/logo.png`} alt="Gravity" className="w-28 h-28 object-contain opacity-30" />
           </motion.div>
         </div>
       </section>

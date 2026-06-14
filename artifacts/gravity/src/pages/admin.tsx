@@ -180,12 +180,11 @@ export default function AdminPage() {
                     >
                       <Upload className="h-8 w-8 text-purple-400 mx-auto mb-3" />
                       <p className="text-sm text-purple-200/80 font-medium">
-                        {file ? file.name : "Click to select .exe file"}
+                        {file ? file.name : "Click to select file (.exe, .zip, or any format)"}
                       </p>
                       <input 
                         ref={fileInputRef}
                         type="file" 
-                        accept=".exe"
                         className="hidden"
                         onChange={(e) => setFile(e.target.files?.[0] || null)}
                       />

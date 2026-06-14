@@ -34,7 +34,7 @@ export default function DownloadPage() {
         >
           <div className="w-24 h-24 mb-8 relative rounded-full flex items-center justify-center bg-purple-900/20 border border-purple-500/30">
             <img
-              src={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/logo.svg`}
+              src={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/logo.png`}
               alt="Gravity Logo"
               className="w-16 h-16 animate-[float_6s_ease-in-out_infinite]"
             />
