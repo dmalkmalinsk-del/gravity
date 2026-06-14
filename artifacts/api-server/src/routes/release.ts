@@ -52,9 +52,8 @@ async function requireOwner(req: any, res: any, next: any) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const email = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress;
+    const user = await clerkClient.users.getUser(userId);
+    const email = user.emailAddresses.find((e: { id: string; emailAddress: string }) => e.id === user.primaryEmailAddressId)?.emailAddress;
     if (email !== OWNER_EMAIL) {
       return res.status(403).json({ error: "Forbidden" });
     }
