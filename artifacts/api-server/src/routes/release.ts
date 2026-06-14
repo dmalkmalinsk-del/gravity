@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAuth, clerkClient } from "@clerk/express";
+import { getAuth, createClerkClient } from "@clerk/express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -9,6 +9,8 @@ import { UpdateReleaseBody } from "@workspace/api-zod";
 import { logger } from "../lib/logger";
 
 const router = Router();
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 const OWNER_EMAIL = "adammalik1234674@gmail.com";
 
@@ -52,8 +54,8 @@ async function requireOwner(req: any, res: any, next: any) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   try {
-    const user = await clerkClient.users.getUser(userId);
-    const email = user.emailAddresses.find((e: { id: string; emailAddress: string }) => e.id === user.primaryEmailAddressId)?.emailAddress;
+    const user = await clerk.users.getUser(userId);
+    const email = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress;
     if (email !== OWNER_EMAIL) {
       return res.status(403).json({ error: "Forbidden" });
     }
