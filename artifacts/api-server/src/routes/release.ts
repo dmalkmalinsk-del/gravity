@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAuth, createClerkClient } from "@clerk/express";
+import { getAuth } from "@clerk/express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -10,9 +10,23 @@ import { logger } from "../lib/logger";
 
 const router = Router();
 
-const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-
 const OWNER_EMAIL = "adammalik1234674@gmail.com";
+
+async function getClerkUserEmail(userId: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
+      headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as {
+      primary_email_address_id: string;
+      email_addresses: Array<{ id: string; email_address: string }>;
+    };
+    return data.email_addresses.find((e) => e.id === data.primary_email_address_id)?.email_address ?? null;
+  } catch {
+    return null;
+  }
+}
 
 const workspaceRoot = process.cwd().endsWith(path.join("artifacts", "api-server"))
   ? path.resolve(process.cwd(), "../..")
@@ -53,13 +67,8 @@ async function requireOwner(req: any, res: any, next: any) {
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  try {
-    const user = await clerk.users.getUser(userId);
-    const email = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress;
-    if (email !== OWNER_EMAIL) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-  } catch {
+  const email = await getClerkUserEmail(userId);
+  if (email !== OWNER_EMAIL) {
     return res.status(403).json({ error: "Forbidden" });
   }
   req.userId = userId;
