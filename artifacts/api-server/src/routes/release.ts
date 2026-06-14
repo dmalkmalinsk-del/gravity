@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAuth } from "@clerk/express";
+import { getAuth, clerkClient } from "@clerk/express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -47,12 +47,18 @@ function requireAuth(req: any, res: any, next: any) {
 
 async function requireOwner(req: any, res: any, next: any) {
   const auth = getAuth(req);
-  const userId = auth?.sessionClaims?.userId || auth?.userId;
+  const userId = auth?.userId;
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  const email = auth?.sessionClaims?.email as string | undefined;
-  if (email !== OWNER_EMAIL) {
+  try {
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    const email = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress;
+    if (email !== OWNER_EMAIL) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+  } catch {
     return res.status(403).json({ error: "Forbidden" });
   }
   req.userId = userId;
